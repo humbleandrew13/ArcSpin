@@ -85,17 +85,17 @@ while failed == False:
 		xsIncrement = 0
 		frame.tick(5)
 		while xsCircleActive == True:
-			if xsIncrement % 30 == 0:
-				drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
-				pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, 10)
-				xsCircleStartingRadiant += xsCircleArcIncrement
-				xsCircleEndingRadiant += xsCircleArcIncrement
 			pygame.event.pump()
 			pressedKeys = pygame.key.get_pressed()
 			if pressedKeys[pygame.K_SPACE]:
 				xsCircleActive = False
 				sCircleActive = True
 				break
+			if xsIncrement % 20 == 0:
+				drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
+				pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, 10)
+				xsCircleStartingRadiant += xsCircleArcIncrement
+				xsCircleEndingRadiant += xsCircleArcIncrement
 			xsIncrement += 1
 			if xsIncrement > 1200:
 				xsCircleActive = False
@@ -116,17 +116,17 @@ while failed == False:
 		sCircleArcIncrement = pi/6
 		sIncrement = 0
 		while sCircleActive == True:
-			if sIncrement % 15 == 0:
-				drawPinnedCircle(smallCircle.numberOfPins, smallCircle.numberOfArcs, smallCircle.color1, smallCircle.color2, smallCircle.areaForCircle, smallCircle.pins)
-				pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, 10)
-				sCircleStartingRadiant -= sCircleArcIncrement
-				sCircleEndingRadiant -= sCircleArcIncrement
 			pygame.event.pump()
 			pressedKeys = pygame.key.get_pressed()
 			if pressedKeys[pygame.K_SPACE]:
 				sCircleActive = False
 				mCircleActive = True
 				break
+			if sIncrement % 15 == 0:
+				drawPinnedCircle(smallCircle.numberOfPins, smallCircle.numberOfArcs, smallCircle.color1, smallCircle.color2, smallCircle.areaForCircle, smallCircle.pins)
+				pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, 10)
+				sCircleStartingRadiant -= sCircleArcIncrement
+				sCircleEndingRadiant -= sCircleArcIncrement
 			sIncrement += 1
 			if sIncrement > 1200:
 				sCircleActive = False
@@ -147,17 +147,17 @@ while failed == False:
 		mCircleArcIncrement = pi/12
 		mIncrement = 0
 		while mCircleActive == True:
-			if mIncrement % 12 == 0:
-				drawPinnedCircle(mediumCircle.numberOfPins, mediumCircle.numberOfArcs, mediumCircle.color1, mediumCircle.color2, mediumCircle.areaForCircle, mediumCircle.pins)
-				pygame.draw.arc(screen, red, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, 10)
-				mCircleStartingRadiant += mCircleArcIncrement
-				mCircleEndingRadiant += mCircleArcIncrement
 			pygame.event.pump()
 			pressedKeys = pygame.key.get_pressed()
 			if pressedKeys[pygame.K_SPACE]:
 				mCircleActive = False
 				lCircleActive = True
 				break
+			if mIncrement % 12 == 0:
+				drawPinnedCircle(mediumCircle.numberOfPins, mediumCircle.numberOfArcs, mediumCircle.color1, mediumCircle.color2, mediumCircle.areaForCircle, mediumCircle.pins)
+				pygame.draw.arc(screen, red, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, 10)
+				mCircleStartingRadiant += mCircleArcIncrement
+				mCircleEndingRadiant += mCircleArcIncrement
 			mIncrement += 1
 			if mIncrement > 1200:
 				mCircleActive = False
@@ -175,17 +175,17 @@ while failed == False:
 		lCircleArcIncrement = pi/30
 		lIncrement = 0
 		while lCircleActive == True:
-			if lIncrement % 6 == 0:
-				drawPinnedCircle(largeCircle.numberOfPins, largeCircle.numberOfArcs, largeCircle.color1, largeCircle.color2, largeCircle.areaForCircle, mediumCircle.pins)
-				pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, 10)
-				lCircleStartingRadiant -= lCircleArcIncrement
-				lCircleEndingRadiant -= lCircleArcIncrement
 			pygame.event.pump()
 			pressedKeys = pygame.key.get_pressed()
 			if pressedKeys[pygame.K_SPACE]:
 				lCircleActive = False
 				xlCircleActive = True
 				break
+			if lIncrement % 6 == 0:
+				drawPinnedCircle(largeCircle.numberOfPins, largeCircle.numberOfArcs, largeCircle.color1, largeCircle.color2, largeCircle.areaForCircle, mediumCircle.pins)
+				pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, 10)
+				lCircleStartingRadiant -= lCircleArcIncrement
+				lCircleEndingRadiant -= lCircleArcIncrement
 			lIncrement += 1
 			if lIncrement > 1200:
 				lCircleActive = False
@@ -203,22 +203,22 @@ while failed == False:
 		xlCircleArcIncrement = pi/60
 		xlIncrement = 0
 		while xlCircleActive == True:
-			drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
-			pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, 10)
-			xlCircleStartingRadiant += xlCircleArcIncrement
-			xlCircleEndingRadiant += xlCircleArcIncrement
 			pygame.event.pump()
 			pressedKeys = pygame.key.get_pressed()
 			if pressedKeys[pygame.K_SPACE]:
 				xlCircleActive = False
 				xsCircleActive = True
 				break
+			drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
+			pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, 10)
+			xlCircleStartingRadiant += xlCircleArcIncrement
+			xlCircleEndingRadiant += xlCircleArcIncrement
 			xlIncrement += 1
-			if xlIncrement > 14400:
+			if xlIncrement > 6400:
 				xlCircleActive = False
 				gameActive = False
 				failed = True
 				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
 				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
 			pygame.display.flip()
-			frame.tick(120)
+			frame.tick(180)

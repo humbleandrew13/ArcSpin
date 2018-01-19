@@ -28,9 +28,9 @@ def drawPinnedCircle(numberOfPins, numberOfArcs, color1, color2, areaForCircle, 
 	endingRadian = 2*pi/numberOfArcs
 	for i in range(numberOfArcs):
 		if i in pins:
-			pygame.draw.arc(screen, color1, areaForCircle, startingRadian, endingRadian, 10)
+			pygame.draw.arc(screen, color1, areaForCircle, startingRadian, endingRadian, arcWidth)
 		else:
-			pygame.draw.arc(screen, color2, areaForCircle, startingRadian, endingRadian, 10)
+			pygame.draw.arc(screen, color2, areaForCircle, startingRadian, endingRadian, arcWidth)
 		startingRadian = endingRadian
 		endingRadian += 2*pi/numberOfArcs
 	return ArcCircle(numberOfPins, numberOfArcs, color1, color2, areaForCircle, pins)
@@ -52,16 +52,21 @@ xlCircleActive = False
 #colors
 black = (0, 0, 0)
 white = (255, 255, 255)
-red = (255, 0, 0)
+red = (204, 0, 0)
 orange = (255, 128, 0)
 yellow = (255, 255, 0)
 green = (0, 255, 0)
-blue = (0, 0, 255)
+blue = (0, 0, 153)
 purple = (76, 0, 153)
-gray = (180, 180, 180)
+gray = (96, 96, 96)
+darkGray = (32, 32, 32)
+
+screen.fill(darkGray)
+
+arcWidth = 12
 
 #create center Circle(s)
-pygame.draw.circle(screen, yellow, (320,320), 10)
+pygame.draw.circle(screen, blue, (320,320), arcWidth)
 
 #create Rects for Arc Circles
 xsSquareForCircles = [260, 260, 120, 120]
@@ -78,7 +83,7 @@ while failed == False:
 	level = 1
 	
 	while gameActive == True: 
-		xsCircle = drawPinnedCircle(1, 6, green, red, xsSquareForCircles, [])
+		xsCircle = drawPinnedCircle(1, 6, red, blue, xsSquareForCircles, [])
 		xsCircleStartingRadiant = 0
 		xsCircleEndingRadiant = pi/3
 		xsCircleArcIncrement = pi/3
@@ -91,26 +96,26 @@ while failed == False:
 				xsCircleActive = False
 				sCircleActive = True
 				break
-			if xsIncrement % 20 == 0:
+			if xsIncrement % 40 == 0:
 				drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
-				pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, 10)
+				pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
 				xsCircleStartingRadiant += xsCircleArcIncrement
 				xsCircleEndingRadiant += xsCircleArcIncrement
 			xsIncrement += 1
-			if xsIncrement > 1200:
+			if xsIncrement > 1800:
 				xsCircleActive = False
 				gameActive = False
 				failed = True
 				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
 				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
 			pygame.display.flip()
-			frame.tick(30)
+			frame.tick(180)
 
 		if not gameActive:
 			continue
 
 		frame.tick(5)
-		smallCircle = drawPinnedCircle(1, 12, blue, orange, sSquareForCircles, [])
+		smallCircle = drawPinnedCircle(1, 12, red, blue, sSquareForCircles, [])
 		sCircleStartingRadiant = 0
 		sCircleEndingRadiant = pi/6
 		sCircleArcIncrement = pi/6
@@ -122,26 +127,26 @@ while failed == False:
 				sCircleActive = False
 				mCircleActive = True
 				break
-			if sIncrement % 15 == 0:
+			if sIncrement % 28 == 0:
 				drawPinnedCircle(smallCircle.numberOfPins, smallCircle.numberOfArcs, smallCircle.color1, smallCircle.color2, smallCircle.areaForCircle, smallCircle.pins)
-				pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, 10)
+				pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
 				sCircleStartingRadiant -= sCircleArcIncrement
 				sCircleEndingRadiant -= sCircleArcIncrement
 			sIncrement += 1
-			if sIncrement > 1200:
+			if sIncrement > 1800:
 				sCircleActive = False
 				gameActive = False
 				failed = True
 				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
 				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
 			pygame.display.flip()
-			frame.tick(30)
+			frame.tick(180)
 
 		if not gameActive:
 			continue
 
 		frame.tick(5)
-		mediumCircle = drawPinnedCircle(1, 24, purple, yellow, mSquareForCircles, [])
+		mediumCircle = drawPinnedCircle(1, 24, red, blue, mSquareForCircles, [])
 		mCircleStartingRadiant = 0
 		mCircleEndingRadiant = pi/12
 		mCircleArcIncrement = pi/12
@@ -153,23 +158,23 @@ while failed == False:
 				mCircleActive = False
 				lCircleActive = True
 				break
-			if mIncrement % 12 == 0:
+			if mIncrement % 20 == 0:
 				drawPinnedCircle(mediumCircle.numberOfPins, mediumCircle.numberOfArcs, mediumCircle.color1, mediumCircle.color2, mediumCircle.areaForCircle, mediumCircle.pins)
-				pygame.draw.arc(screen, red, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, 10)
+				pygame.draw.arc(screen, white, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
 				mCircleStartingRadiant += mCircleArcIncrement
 				mCircleEndingRadiant += mCircleArcIncrement
 			mIncrement += 1
-			if mIncrement > 1200:
+			if mIncrement > 1800:
 				mCircleActive = False
 				gameActive = False
 				failed = True
 				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
 				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
 			pygame.display.flip()
-			frame.tick(30)
+			frame.tick(180)
 
 		frame.tick(5)
-		largeCircle = drawPinnedCircle(1, 60, red, green, lSquareForCircles, [])
+		largeCircle = drawPinnedCircle(1, 60, red, blue, lSquareForCircles, [])
 		lCircleStartingRadiant = 0
 		lCircleEndingRadiant = pi/30
 		lCircleArcIncrement = pi/30
@@ -181,23 +186,23 @@ while failed == False:
 				lCircleActive = False
 				xlCircleActive = True
 				break
-			if lIncrement % 6 == 0:
+			if lIncrement % 2 == 0:
 				drawPinnedCircle(largeCircle.numberOfPins, largeCircle.numberOfArcs, largeCircle.color1, largeCircle.color2, largeCircle.areaForCircle, mediumCircle.pins)
-				pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, 10)
+				pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, arcWidth)
 				lCircleStartingRadiant -= lCircleArcIncrement
 				lCircleEndingRadiant -= lCircleArcIncrement
 			lIncrement += 1
-			if lIncrement > 1200:
+			if lIncrement > 1800:
 				lCircleActive = False
 				gameActive = False
 				failed = True
 				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
 				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
 			pygame.display.flip()
-			frame.tick(30)
+			frame.tick(180)
 
 		frame.tick(5)
-		xlCircle = drawPinnedCircle(1, 120, orange, blue, xlSquareForCircles, [])
+		xlCircle = drawPinnedCircle(1, 120, red, blue, xlSquareForCircles, [])
 		xlCircleStartingRadiant = 0
 		xlCircleEndingRadiant = pi/60
 		xlCircleArcIncrement = pi/60
@@ -210,15 +215,15 @@ while failed == False:
 				xsCircleActive = True
 				break
 			drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
-			pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, 10)
+			pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, arcWidth)
 			xlCircleStartingRadiant += xlCircleArcIncrement
 			xlCircleEndingRadiant += xlCircleArcIncrement
 			xlIncrement += 1
-			if xlIncrement > 6400:
+			if xlIncrement > 2100:
 				xlCircleActive = False
 				gameActive = False
 				failed = True
 				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
 				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
 			pygame.display.flip()
-			frame.tick(180)
+			frame.tick(240)

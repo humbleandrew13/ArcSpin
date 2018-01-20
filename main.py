@@ -2,6 +2,7 @@ import pygame
 from math import pi
 import random
 
+#classes
 class ArcCircle:
 	def __init__(self, numberOfPins, numberOfArcs, color1, color2, areaForCircle, pins):
 		self.numberOfPins = numberOfPins
@@ -11,15 +12,14 @@ class ArcCircle:
 		self.areaForCircle = areaForCircle
 		self.pins = pins
 
-#Assign pins
+#Methods
 def createRandomPins(numberOfPins, numberOfArcs):
 	randomNumber = random.randint(0, numberOfArcs)
 	pins = []
 	for i in range(numberOfPins):
-		pins.append((randomNumber + i)%numberOfArcs)
+		pins.append((randomNumber + i) % numberOfArcs)
 	return pins
 
-#function for creating the circles
 def drawPinnedCircle(numberOfPins, numberOfArcs, color1, color2, areaForCircle, pins):
 	global pi
 	if not pins:
@@ -35,12 +35,16 @@ def drawPinnedCircle(numberOfPins, numberOfArcs, color1, color2, areaForCircle, 
 		endingRadian += 2*pi/numberOfArcs
 	return ArcCircle(numberOfPins, numberOfArcs, color1, color2, areaForCircle, pins)
 
+
 pygame.init()
+pygame.display.set_caption("ArcSpin")
 size = (960, 640)
 screen = pygame.display.set_mode(size)
 frame = pygame.time.Clock()
-pygame.display.set_caption("ArcSpin")
 font = pygame.font.SysFont("arial", 30, True)
+
+#Initialize all global variables
+#bools
 failed = False
 gameActive = True
 xsCircleActive = True
@@ -48,6 +52,9 @@ sCircleActive = False
 mCircleActive = False
 lCircleActive = False
 xlCircleActive = False
+
+#numbers
+arcWidth = 12
 
 #colors
 black = (0, 0, 0)
@@ -61,9 +68,9 @@ purple = (76, 0, 153)
 gray = (96, 96, 96)
 darkGray = (32, 32, 32)
 
-screen.fill(darkGray)
-
-arcWidth = 12
+#anything that needs colors
+#screen.fill(darkGray)
+tooManyRotations = font.render("Too many rotations!", True, white)
 
 #create center Circle(s)
 pygame.draw.circle(screen, blue, (320,320), arcWidth)
@@ -75,17 +82,24 @@ mSquareForCircles = [140, 140, 360, 360]
 lSquareForCircles = [80, 80, 480, 480]
 xlSquareForCircles = [20, 20, 600, 600]
 
+
 while failed == False:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			failed = True
-
+	#New game starts here
 	level = 1
-	
+	missedPins = 0
+	score = 0
+	movements = 0
+	rotations = 0
+	scoreText = font.render("Score: " + str(score), True, white)
+
 	while gameActive == True: 
 		xsCircle = drawPinnedCircle(1, 6, red, blue, xsSquareForCircles, [])
-		xsCircleStartingRadiant = 0
-		xsCircleEndingRadiant = pi/3
+		randomMultiplier = random.randint(0,5)
+		xsCircleStartingRadiant = randomMultiplier * pi/3
+		xsCircleEndingRadiant = xsCircleStartingRadiant + pi/3
 		xsCircleArcIncrement = pi/3
 		xsIncrement = 0
 		frame.tick(5)
@@ -106,8 +120,7 @@ while failed == False:
 				xsCircleActive = False
 				gameActive = False
 				failed = True
-				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
-				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
+				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
 			frame.tick(180)
 
@@ -116,8 +129,9 @@ while failed == False:
 
 		frame.tick(5)
 		smallCircle = drawPinnedCircle(1, 12, red, blue, sSquareForCircles, [])
-		sCircleStartingRadiant = 0
-		sCircleEndingRadiant = pi/6
+		randomMultiplier = random.randint(0,11)
+		sCircleStartingRadiant = randomMultiplier * pi/6
+		sCircleEndingRadiant = sCircleStartingRadiant + pi/6
 		sCircleArcIncrement = pi/6
 		sIncrement = 0
 		while sCircleActive == True:
@@ -137,8 +151,7 @@ while failed == False:
 				sCircleActive = False
 				gameActive = False
 				failed = True
-				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
-				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
+				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
 			frame.tick(180)
 
@@ -147,8 +160,9 @@ while failed == False:
 
 		frame.tick(5)
 		mediumCircle = drawPinnedCircle(1, 24, red, blue, mSquareForCircles, [])
-		mCircleStartingRadiant = 0
-		mCircleEndingRadiant = pi/12
+		randomMultiplier = random.randint(0,23)
+		mCircleStartingRadiant = randomMultiplier * pi/12
+		mCircleEndingRadiant = mCircleStartingRadiant + pi/12
 		mCircleArcIncrement = pi/12
 		mIncrement = 0
 		while mCircleActive == True:
@@ -168,15 +182,15 @@ while failed == False:
 				mCircleActive = False
 				gameActive = False
 				failed = True
-				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
-				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
+				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
 			frame.tick(180)
 
 		frame.tick(5)
 		largeCircle = drawPinnedCircle(1, 60, red, blue, lSquareForCircles, [])
-		lCircleStartingRadiant = 0
-		lCircleEndingRadiant = pi/30
+		randomMultiplier = random.randint(0,59)
+		lCircleStartingRadiant = randomMultiplier * pi/30
+		lCircleEndingRadiant = lCircleStartingRadiant + pi/30
 		lCircleArcIncrement = pi/30
 		lIncrement = 0
 		while lCircleActive == True:
@@ -196,15 +210,15 @@ while failed == False:
 				lCircleActive = False
 				gameActive = False
 				failed = True
-				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
-				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
+				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
 			frame.tick(180)
 
 		frame.tick(5)
 		xlCircle = drawPinnedCircle(1, 120, red, blue, xlSquareForCircles, [])
-		xlCircleStartingRadiant = 0
-		xlCircleEndingRadiant = pi/60
+		randomMultiplier = random.randint(0,119)
+		xlCircleStartingRadiant = randomMultiplier * pi/60
+		xlCircleEndingRadiant = xlCircleStartingRadiant + pi/60
 		xlCircleArcIncrement = pi/60
 		xlIncrement = 0
 		while xlCircleActive == True:
@@ -223,7 +237,6 @@ while failed == False:
 				xlCircleActive = False
 				gameActive = False
 				failed = True
-				tooMany = font.render("Too many rotations!", True, (255, 255, 255))
-				screen.blit(tooMany, (800 - tooMany.get_width()/2, 320 - tooMany.get_height()/2))
+				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
 			frame.tick(240)

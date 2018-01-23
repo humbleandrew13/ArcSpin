@@ -62,6 +62,7 @@ size = (960, 640)
 screen = pygame.display.set_mode(size)
 frame = pygame.time.Clock()
 font = pygame.font.SysFont("arial", 30, True)
+smallFont = pygame.font.SysFont("arial", 16, True)
 
 #Initialize all global variables
 #bools
@@ -105,7 +106,7 @@ xlSquareForCircles = [20, 20, 600, 600]
 tooManyRotations = font.render("Too many rotations!", True, white)
 
 #create center Circle(s)
-pygame.draw.circle(screen, blue, (320,320), arcWidth)
+#pygame.draw.circle(screen, blue, (320,320), arcWidth)
 
 while failed == False:
 	for event in pygame.event.get():
@@ -121,7 +122,7 @@ while failed == False:
 
 	while gameActive == True:
 		##GET THIS ONE RIGHT THEN REPLACE ALL THE OTHER ONES
-		frame.tick(2)
+		frame.tick(5)
 		xsCircle = drawPinnedCircle(1, 6, red, blue, xsSquareForCircles, [])
 		randomMultiplier = random.randint(0, xsCircle.numberOfArcs)
 		movements = randomMultiplier
@@ -156,6 +157,7 @@ while failed == False:
 				movements = 0
 			ticks += 1
 			if rotations > 10:
+				circleScore = 0
 				xsCircleActive = False
 				gameActive = False
 				failed = True
@@ -163,6 +165,8 @@ while failed == False:
 			pygame.display.flip()
 			frame.tick(180)
 		screen.fill(black)
+		circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+		screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 		drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
 		pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant - xsCircleRadiantIncrement, xsCircleEndingRadiant - xsCircleRadiantIncrement, arcWidth)
 		screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))

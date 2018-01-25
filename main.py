@@ -143,7 +143,17 @@ while gameActive == True:
 				xsCircleActive = False
 				sCircleActive = True
 				break
-			if ticks == 90 - ((level - 1) * 10):
+			if level >= 10:
+				screen.fill(black)
+				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
+				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
+				pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
+				xsCircleStartingRadiant += xsCircleRadiantIncrement
+				xsCircleEndingRadiant += xsCircleRadiantIncrement
+				movements += 1
+			elif ticks == 90 - ((level - 1) * 10):
 				screen.fill(black)
 				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
@@ -202,7 +212,17 @@ while gameActive == True:
 				sCircleActive = False
 				mCircleActive = True
 				break
-			if ticks == 85 - ((level - 1) * 10): #Moves the highlighted arc every so many ticks
+			if level >= 10:
+				screen.fill(black)
+				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
+				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				drawPinnedCircle(sCircle.numberOfPins, sCircle.numberOfArcs, sCircle.color1, sCircle.color2, sCircle.areaForCircle, sCircle.pins)
+				pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
+				sCircleStartingRadiant += sCircleRadiantIncrement
+				sCircleEndingRadiant += sCircleRadiantIncrement
+				movements += 1
+			elif ticks == 85 - ((level - 1) * 10):
 				screen.fill(black)
 				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
@@ -273,7 +293,17 @@ while gameActive == True:
 						mCircleActive = False
 						xsCircleActive = True
 				break
-			if ticks == 80 - ((level - 1) * 10):
+			if level >= 9:
+				screen.fill(black)
+				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
+				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				drawPinnedCircle(mCircle.numberOfPins, mCircle.numberOfArcs, mCircle.color1, mCircle.color2, mCircle.areaForCircle, mCircle.pins)
+				pygame.draw.arc(screen, white, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
+				mCircleStartingRadiant += mCircleRadiantIncrement
+				mCircleEndingRadiant += mCircleRadiantIncrement
+				movements += 1
+			elif ticks == 80 - ((level - 1) * 10):
 				screen.fill(black)
 				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))

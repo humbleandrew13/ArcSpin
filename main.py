@@ -1,6 +1,6 @@
 import pygame
 from math import pi
-import math
+#import math
 import random
 
 #classes
@@ -114,6 +114,7 @@ while gameActive == True:
 	missedPins = 0
 	comboMultiplier = 0
 	score = 0
+	frameTicks = 30
 	scoreTextWord = largeFont.render("Score", True, white)
 	scoreTextNumber = largeFont.render(str(score), True, white)
 	circleScoreText = smallFont.render("", True, white)
@@ -137,7 +138,6 @@ while gameActive == True:
 			pressedKeys = pygame.key.get_pressed()
 			if pressedKeys[pygame.K_SPACE]:
 				circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(100, 60, movements, xsCircle.pins, xsCircle.numberOfArcs, comboMultiplier, rotations)
-				print rotations, circleScore, comboMultiplier
 				if missedPin: missedPins += 1
 				score += circleScore
 				xsCircleActive = False
@@ -174,7 +174,7 @@ while gameActive == True:
 				failed = True
 				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
-			frame.tick(360)
+			frame.tick(frameTicks)
 		screen.fill(black)
 		circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 		screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
@@ -244,7 +244,7 @@ while gameActive == True:
 				gameActive = False
 				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
-			frame.tick(360)
+			frame.tick(300)
 		screen.fill(black)
 		circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 		screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
@@ -325,7 +325,7 @@ while gameActive == True:
 				gameActive = False
 				screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 			pygame.display.flip()
-			frame.tick(360)
+			frame.tick(300)
 		screen.fill(black)
 		if lCircleActive:
 			circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -409,7 +409,7 @@ while gameActive == True:
 					gameActive = False
 					screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 				pygame.display.flip()
-				frame.tick(360)
+				frame.tick(300)
 			screen.fill(black)
 			if xlCircleActive:
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -478,7 +478,7 @@ while gameActive == True:
 					gameActive = False
 					screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 				pygame.display.flip()
-				frame.tick(360)
+				frame.tick(300)
 			screen.fill(black)
 			circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))

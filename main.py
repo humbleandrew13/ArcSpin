@@ -115,6 +115,10 @@ mainMenuArc12 = [mainMenuBottomRect, pi, 5*pi/4]
 mainMenuArcs = [mainMenuArc1, mainMenuArc2, mainMenuArc3, mainMenuArc4, mainMenuArc5, mainMenuArc6, mainMenuArc7, mainMenuArc8, mainMenuArc9, mainMenuArc10, mainMenuArc11, mainMenuArc12]
 
 while gameInUse:
+	for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				gameOver = True
+				gameActive = False
 	frame.tick(2)
 	ticks = 0
 	movements = 0
@@ -129,6 +133,10 @@ while gameInUse:
 	arcText = mainMenuFont.render("arc", True, movingColor)
 	pinText = mainMenuFont.render("pin", True, movingColor)
 	while mainMenuShowing:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				gameOver = True
+				gameActive = False
 		if ticks == 4:
 			if movements > 11: 
 				arcColorRed = random.randint(0,255)
@@ -186,6 +194,10 @@ while gameInUse:
 		circleScoreText = smallFont.render("", True, white)
 
 		while gameOver == False:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					gameOver = True
+					gameActive = False
 			frame.tick(5)
 			xsCircle = drawPinnedCircle(1, 6, red, blue, xsSquareForCircles, [])
 			randomMultiplier = random.randint(0, xsCircle.numberOfArcs)

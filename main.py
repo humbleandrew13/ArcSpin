@@ -1,7 +1,7 @@
 import pygame
 from math import pi
-#import math
 import random
+import shelve
 
 #classes
 class ArcCircle:
@@ -53,13 +53,6 @@ def getScoreMissedPinsAndMultiplier(circlePinValue, circleNonPinValue, movements
 			thisCircleScore = int(circleNonPinValue * (.95 ** (abs(movements - 1 - circlePins[0]))))
 	return thisCircleScore, missedPin, comboMultiplier
 
-#def playAgain():
-	#let screen tick for a second or two
-	#blacken screen
-	#Display game over; final score
-	#Ask to hit space bar if they want to play again
-	#if space bar is hit, return True
-
 pygame.init()
 pygame.display.set_caption("ArcSpin")
 size = (960, 640)
@@ -70,11 +63,16 @@ largeFont = pygame.font.SysFont("arial", 30, True)
 mediumFont = pygame.font.SysFont("arial", 22, True)
 smallFont = pygame.font.SysFont("arial", 14, True)
 
+scoreHolder = shelve.open('highscore.txt')
+scoreHolder['highScore'] = 0
+scoreHolder.close()
+
 #Initialize all global variables
 #bools
 gameInUse = True
 mainMenuShowing = True
 gameActive = False
+restartScreenActive = False
 
 #colors
 black = (0, 0, 0)
@@ -90,6 +88,7 @@ darkGray = (32, 32, 32)
 
 mainMenuTopRect = [400, 152, 160, 160]
 mainMenuBottomRect = [400, 306, 160, 160]
+
 #create Rects for Arc Circles
 xsSquareForCircles = [260, 260, 120, 120]
 sSquareForCircles = [200, 200, 240, 240]
@@ -129,6 +128,8 @@ while gameInUse:
 	movingColorBlue = (arcColorBlue + 127) % 256
 	movingColorGreen = (arcColorGreen + 52) % 256
 	arcColor = (arcColorRed, arcColorBlue, arcColorGreen)
+	spinnerColor = (255, 255, 255)
+	if (arcColorRed + arcColorGreen + arcColorBlue) > 400: spinnerColor = darkGray
 	movingColor = (movingColorRed, movingColorBlue, movingColorGreen)
 	arcText = mainMenuFont.render("arc", True, movingColor)
 	pinText = mainMenuFont.render("pin", True, movingColor)
@@ -163,8 +164,7 @@ while gameInUse:
 		frame.tick(30)
 
 		pygame.event.pump()
-		pressedKeys = pygame.key.get_pressed()
-		if pressedKeys[pygame.K_SPACE]:
+		if pygame.mouse.get_pressed()[0]:
 			ticks = 0
 			mainMenuShowing = False
 			gameActive = True
@@ -199,22 +199,21 @@ while gameInUse:
 					gameOver = True
 					gameActive = False
 			frame.tick(5)
-			xsCircle = drawPinnedCircle(1, 6, red, blue, xsSquareForCircles, [])
+			xsCircle = drawPinnedCircle(1, 6, movingColor, arcColor, xsSquareForCircles, [])
 			randomMultiplier = random.randint(0, xsCircle.numberOfArcs)
 			movements = randomMultiplier
 			rotations = 0
 			xsCircleStartingRadiant = randomMultiplier * 2 * pi / xsCircle.numberOfArcs
 			xsCircleEndingRadiant = xsCircleStartingRadiant + (2 * pi / xsCircle.numberOfArcs)
 			xsCircleRadiantIncrement = 2 * pi/ xsCircle.numberOfArcs
-			pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
+			pygame.draw.arc(screen, spinnerColor, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
 			ticks = 0
 			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 			while xsCircleActive == True:
 				pygame.event.pump()
-				pressedKeys = pygame.key.get_pressed()
-				if pressedKeys[pygame.K_SPACE]:
+				if pygame.mouse.get_pressed()[0]:
 					if movements == 0: movements = xsCircle.numberOfArcs
 					circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(100, 60, movements - 1, xsCircle.pins, xsCircle.numberOfArcs, comboMultiplier, rotations)
 					if missedPin: missedPins += 1
@@ -230,7 +229,7 @@ while gameInUse:
 					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
-					pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
+					pygame.draw.arc(screen, spinnerColor, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
 					xsCircleStartingRadiant += xsCircleRadiantIncrement
 					xsCircleEndingRadiant += xsCircleRadiantIncrement
 					ticks = 0
@@ -250,36 +249,35 @@ while gameInUse:
 			circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 			drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
-			pygame.draw.arc(screen, white, xsSquareForCircles, xsCircleStartingRadiant - xsCircleRadiantIncrement, xsCircleEndingRadiant - xsCircleRadiantIncrement, arcWidth)
+			pygame.draw.arc(screen, spinnerColor, xsSquareForCircles, xsCircleStartingRadiant - xsCircleRadiantIncrement, xsCircleEndingRadiant - xsCircleRadiantIncrement, arcWidth)
 			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 			scoreTextNumber = largeFont.render(str(score), True, white)
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
 			if gameOver:
-				print "GAME OVER - XS"
-				mainMenuShowing = True
-				gameActive = False
-				#Show high score(s)
-				#gameRestart = playAgain()
-				#if not gameRestart: gameActive = False and return to Main Menu
+				frame.tick(1)
+				screen.fill(black)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				restartScreenActive = True
+				pygame.display.flip()
 				continue
 
 			frame.tick(5)
-			sCircle = drawPinnedCircle(1, 12, red, blue, sSquareForCircles, [])
+			sCircle = drawPinnedCircle(1, 12, movingColor, arcColor, sSquareForCircles, [])
 			randomMultiplier = random.randint(0, sCircle.numberOfArcs)
 			movements = randomMultiplier
 			rotations = 0
 			sCircleStartingRadiant = randomMultiplier * 2 * pi / sCircle.numberOfArcs
 			sCircleEndingRadiant = sCircleStartingRadiant + (2 * pi / sCircle.numberOfArcs)
 			sCircleRadiantIncrement = 2 * pi/ sCircle.numberOfArcs
-			pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
+			pygame.draw.arc(screen, spinnerColor, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
 			ticks = 0
 			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 			while sCircleActive == True:
 				pygame.event.pump()
-				pressedKeys = pygame.key.get_pressed()
-				if pressedKeys[pygame.K_SPACE]:
+				if pygame.mouse.get_pressed()[0]:
 					if movements == 0: movements = sCircle.numberOfArcs
 					circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(500, 300, movements - 1, sCircle.pins, sCircle.numberOfArcs, comboMultiplier, rotations)
 					if missedPin: missedPins += 1
@@ -295,12 +293,12 @@ while gameInUse:
 					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(sCircle.numberOfPins, sCircle.numberOfArcs, sCircle.color1, sCircle.color2, sCircle.areaForCircle, sCircle.pins)
-					pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
+					pygame.draw.arc(screen, spinnerColor, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
 					sCircleStartingRadiant += sCircleRadiantIncrement
 					sCircleEndingRadiant += sCircleRadiantIncrement
 					ticks = 0
 					movements += 1
-				if movements == sCircle.numberOfArcs: #Add a rotation for every {numberOfArcs} movements
+				if movements == sCircle.numberOfArcs:
 					rotations += 1
 					movements = 0
 				ticks += 1
@@ -308,7 +306,6 @@ while gameInUse:
 					circleScore = 0
 					sCircleActive = False
 					gameOver = True
-					gameActive = False
 					screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 				pygame.display.flip()
 				frame.tick(speedFps)
@@ -316,33 +313,35 @@ while gameInUse:
 			circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 			drawPinnedCircle(sCircle.numberOfPins, sCircle.numberOfArcs, sCircle.color1, sCircle.color2, sCircle.areaForCircle, sCircle.pins)
-			pygame.draw.arc(screen, white, sSquareForCircles, sCircleStartingRadiant - sCircleRadiantIncrement, sCircleEndingRadiant - sCircleRadiantIncrement, arcWidth)
+			pygame.draw.arc(screen, spinnerColor, sSquareForCircles, sCircleStartingRadiant - sCircleRadiantIncrement, sCircleEndingRadiant - sCircleRadiantIncrement, arcWidth)
 			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 			scoreTextNumber = largeFont.render(str(score), True, white)
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
 			if gameOver:
-				print "GAME OVER - S"
-				mainMenuShowing = True
-				gameActive = False
+				frame.tick(1)
+				screen.fill(black)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				restartScreenActive = True
+				pygame.display.flip()
 				continue
 
 			frame.tick(5)
-			mCircle = drawPinnedCircle(1, 24, red, blue, mSquareForCircles, [])
+			mCircle = drawPinnedCircle(1, 24, movingColor, arcColor, mSquareForCircles, [])
 			randomMultiplier = random.randint(0, mCircle.numberOfArcs)
 			movements = randomMultiplier
 			rotations = 0
 			mCircleStartingRadiant = randomMultiplier * 2 * pi / mCircle.numberOfArcs
 			mCircleEndingRadiant = mCircleStartingRadiant + (2 * pi / mCircle.numberOfArcs)
 			mCircleRadiantIncrement = 2 * pi/ mCircle.numberOfArcs
-			pygame.draw.arc(screen, white, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
+			pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
 			ticks = 0
 			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 			while mCircleActive == True:
 				pygame.event.pump()
-				pressedKeys = pygame.key.get_pressed()
-				if pressedKeys[pygame.K_SPACE]:
+				if pygame.mouse.get_pressed()[0]:
 					if movements == 0: movements = mCircle.numberOfArcs
 					circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(1000, 600, movements - 1, mCircle.pins, mCircle.numberOfArcs, comboMultiplier, rotations)
 					if missedPin: missedPins += 1
@@ -355,18 +354,16 @@ while gameInUse:
 						print speedFps
 					else:
 						if missedPins > 0:
-							#DO GAME OVER STUFF 
 							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 							mCircleActive = False
 							gameOver = True
-							gameActive = False
 							continue
 						else:
 							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 							drawPinnedCircle(mCircle.numberOfPins, mCircle.numberOfArcs, mCircle.color1, mCircle.color2, mCircle.areaForCircle, mCircle.pins)
-							pygame.draw.arc(screen, white, mSquareForCircles, mCircleStartingRadiant - mCircleRadiantIncrement, mCircleEndingRadiant - mCircleRadiantIncrement, arcWidth)
+							pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant - mCircleRadiantIncrement, mCircleEndingRadiant - mCircleRadiantIncrement, arcWidth)
 							level += 1	
 							mCircleActive = False
 							xsCircleActive = True
@@ -378,12 +375,12 @@ while gameInUse:
 					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(mCircle.numberOfPins, mCircle.numberOfArcs, mCircle.color1, mCircle.color2, mCircle.areaForCircle, mCircle.pins)
-					pygame.draw.arc(screen, white, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
+					pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
 					mCircleStartingRadiant += mCircleRadiantIncrement
 					mCircleEndingRadiant += mCircleRadiantIncrement
 					ticks = 0
 					movements += 1
-				if movements == mCircle.numberOfArcs: #Add a rotation for every {numberOfArcs} movements
+				if movements == mCircle.numberOfArcs:
 					rotations += 1
 					movements = 0
 				ticks += 1
@@ -391,7 +388,6 @@ while gameInUse:
 					circleScore = 0
 					mCircleActive = False
 					gameOver = True
-					gameActive = False
 					screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 				pygame.display.flip()
 				frame.tick(speedFps)
@@ -400,34 +396,36 @@ while gameInUse:
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				drawPinnedCircle(mCircle.numberOfPins, mCircle.numberOfArcs, mCircle.color1, mCircle.color2, mCircle.areaForCircle, mCircle.pins)
-				pygame.draw.arc(screen, white, mSquareForCircles, mCircleStartingRadiant - mCircleRadiantIncrement, mCircleEndingRadiant - mCircleRadiantIncrement, arcWidth)
+				pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant - mCircleRadiantIncrement, mCircleEndingRadiant - mCircleRadiantIncrement, arcWidth)
 			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 			scoreTextNumber = largeFont.render(str(score), True, white)
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
 			if gameOver: 
-				print "GAME OVER - M"
-				mainMenuShowing = True
-				gameActive = False
+				frame.tick(1)
+				screen.fill(black)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				restartScreenActive = True
+				pygame.display.flip()
 				continue
 
 			if lCircleActive and level > 3:
 				frame.tick(5)
-				lCircle = drawPinnedCircle(1, 60, red, blue, lSquareForCircles, [])
+				lCircle = drawPinnedCircle(1, 60, movingColor, arcColor, lSquareForCircles, [])
 				randomMultiplier = random.randint(0, lCircle.numberOfArcs)
 				movements = randomMultiplier
 				rotations = 0
 				lCircleStartingRadiant = randomMultiplier * 2 * pi / lCircle.numberOfArcs
 				lCircleEndingRadiant = lCircleStartingRadiant + (2 * pi / lCircle.numberOfArcs)
 				lCircleRadiantIncrement = 2 * pi/ lCircle.numberOfArcs
-				pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, arcWidth)
+				pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, arcWidth)
 				ticks = 0
 				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 				while lCircleActive == True:
 					pygame.event.pump()
-					pressedKeys = pygame.key.get_pressed()
-					if pressedKeys[pygame.K_SPACE]:
+					if pygame.mouse.get_pressed()[0]:
 						if movements == 0: movements = lCircle.numberOfArcs
 						circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(5000, 3000, movements - 1, lCircle.pins, lCircle.numberOfArcs, comboMultiplier, rotations)
 						if missedPin: missedPins += 1
@@ -439,16 +437,14 @@ while gameInUse:
 							print speedFps
 						else:
 							if missedPins > 0:
-								#DO GAME OVER STUFF
 								circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 								screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 								lCircleActive = False
 								gameOver = True
-								gameActive = False
 								continue
 							else:
 								drawPinnedCircle(lCircle.numberOfPins, lCircle.numberOfArcs, lCircle.color1, lCircle.color2, lCircle.areaForCircle, lCircle.pins)
-								pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant - lCircleRadiantIncrement, lCircleEndingRadiant - lCircleRadiantIncrement, arcWidth)
+								pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant - lCircleRadiantIncrement, lCircleEndingRadiant - lCircleRadiantIncrement, arcWidth)
 								circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 								screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 								level += 1	
@@ -462,12 +458,12 @@ while gameInUse:
 						screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 						screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 						drawPinnedCircle(lCircle.numberOfPins, lCircle.numberOfArcs, lCircle.color1, lCircle.color2, lCircle.areaForCircle, lCircle.pins)
-						pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, arcWidth)
+						pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, arcWidth)
 						lCircleStartingRadiant += lCircleRadiantIncrement
 						lCircleEndingRadiant += lCircleRadiantIncrement
 						ticks = 0
 						movements += 1
-					if movements == lCircle.numberOfArcs: #Add a rotation for every {numberOfArcs} movements
+					if movements == lCircle.numberOfArcs:
 						rotations += 1
 						movements = 0
 					ticks += 1
@@ -475,7 +471,6 @@ while gameInUse:
 						circleScore = 0
 						lCircleActive = False
 						gameOver = True
-						gameActive = False
 						screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 					pygame.display.flip()
 					frame.tick(speedFps)
@@ -484,49 +479,49 @@ while gameInUse:
 					circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(lCircle.numberOfPins, lCircle.numberOfArcs, lCircle.color1, lCircle.color2, lCircle.areaForCircle, lCircle.pins)
-					pygame.draw.arc(screen, white, lSquareForCircles, lCircleStartingRadiant - lCircleRadiantIncrement, lCircleEndingRadiant - lCircleRadiantIncrement, arcWidth)
+					pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant - lCircleRadiantIncrement, lCircleEndingRadiant - lCircleRadiantIncrement, arcWidth)
 				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 				scoreTextNumber = largeFont.render(str(score), True, white)
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
 			if gameOver:
-				print "GAME OVER - L"
-				mainMenuShowing = True
-				gameActive = False
+				frame.tick(1)
+				screen.fill(black)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				restartScreenActive = True
+				pygame.display.flip()
 				continue
 
 			if xlCircleActive and level >= 6:
 				frame.tick(5)
-				xlCircle = drawPinnedCircle(1, 120, red, blue, xlSquareForCircles, [])
+				xlCircle = drawPinnedCircle(1, 120, movingColor, arcColor, xlSquareForCircles, [])
 				randomMultiplier = random.randint(0, xlCircle.numberOfArcs)
 				movements = randomMultiplier
 				rotations = 0
 				xlCircleStartingRadiant = randomMultiplier * 2 * pi / xlCircle.numberOfArcs
 				xlCircleEndingRadiant = xlCircleStartingRadiant + (2 * pi / xlCircle.numberOfArcs)
 				xlCircleRadiantIncrement = 2 * pi/ xlCircle.numberOfArcs
-				pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, arcWidth)
+				pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, arcWidth)
 				ticks = 0
 				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 				while xlCircleActive == True:
 					pygame.event.pump()
-					pressedKeys = pygame.key.get_pressed()
-					if pressedKeys[pygame.K_SPACE]:
+					if pygame.mouse.get_pressed()[0]:
 						if movements == 0: movements = xlCircle.numberOfArcs
 						circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(10000, 6000, movements - 1, xlCircle.pins, xlCircle.numberOfArcs, comboMultiplier, rotations)
 						if missedPin: missedPins += 1
 						score += circleScore
-						if missedPins > 0: #GAME OVER
-							#Do game over stuff here
+						if missedPins > 0:
 							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 							xlCircleActive = False
 							gameOver = True
-							gameActive = False
 							continue
 						else:
 							drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
-							pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant - xlCircleRadiantIncrement, xlCircleEndingRadiant - xlCircleRadiantIncrement, arcWidth)
+							pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant - xlCircleRadiantIncrement, xlCircleEndingRadiant - xlCircleRadiantIncrement, arcWidth)
 							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 							level += 1	
@@ -540,12 +535,12 @@ while gameInUse:
 						screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 						screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 						drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
-						pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, arcWidth)
+						pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, arcWidth)
 						xlCircleStartingRadiant += xlCircleRadiantIncrement
 						xlCircleEndingRadiant += xlCircleRadiantIncrement
 						ticks = 0
 						movements += 1
-					if movements == xlCircle.numberOfArcs: #Add a rotation for every {numberOfArcs} movements
+					if movements == xlCircle.numberOfArcs:
 						rotations += 1
 						movements = 0
 					ticks += 1
@@ -553,7 +548,6 @@ while gameInUse:
 						circleScore = 0
 						xlCircleActive = False
 						gameOver = True
-						gameActive = False
 						screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
 					pygame.display.flip()
 					frame.tick(speedFps)
@@ -561,13 +555,48 @@ while gameInUse:
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
-				pygame.draw.arc(screen, white, xlSquareForCircles, xlCircleStartingRadiant - xlCircleRadiantIncrement, xlCircleEndingRadiant - xlCircleRadiantIncrement, arcWidth)
+				pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant - xlCircleRadiantIncrement, xlCircleEndingRadiant - xlCircleRadiantIncrement, arcWidth)
 				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
 				scoreTextNumber = largeFont.render(str(score), True, white)
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				pygame.display.flip()
 
 			if gameOver: 
-				print "GAME OVER - XL"
+				frame.tick(2)
+				screen.fill(black)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+				restartScreenActive = True
+				pygame.display.flip()
+				frame.tick(1.5)
+				ticks = 0
+				continue
+
+		while restartScreenActive:
+			if ticks == 30:
+				screen.fill(black)
+				gameOverText = largeFont.render("GAME OVER", True, arcColor)
+				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 250 - gameOverText.get_height()/2))
+			elif ticks == 60:
+				screen.fill(black)
+				gameOverText = largeFont.render("GAME OVER", True, spinnerColor)
+				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 250 - gameOverText.get_height()/2))
+				ticks = 0
+			pygame.display.flip()
+			frame.tick(60)
+			ticks += 1
+			pygame.event.pump()
+			if pygame.mouse.get_pressed()[0]:
+				restartScreenActive = False
 				mainMenuShowing = True
 				gameActive = False
 				continue
+	#let screen tick for a second or two
+	#blacken screen
+	#Display game over; final score
+	#Ask to hit space bar if they want to play again
+	#if space bar is hit, return True
+	
+	#Show high score(s)
+	#gameRestart = playAgain()
+	#if not gameRestart: gameActive = False and return to Main Menu

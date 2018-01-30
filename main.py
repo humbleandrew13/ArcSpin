@@ -63,10 +63,6 @@ largeFont = pygame.font.SysFont("arial", 30, True)
 mediumFont = pygame.font.SysFont("arial", 22, True)
 smallFont = pygame.font.SysFont("arial", 14, True)
 
-scoreHolder = shelve.open('highscore.txt')
-scoreHolder['highScore'] = 0
-scoreHolder.close()
-
 #Initialize all global variables
 #bools
 gameInUse = True
@@ -118,21 +114,25 @@ while gameInUse:
 			if event.type == pygame.QUIT:
 				gameOver = True
 				gameActive = False
+	scoreHolder = shelve.open('highscore.txt')
+	highScore = scoreHolder['highScore']
+	scoreHolder.close()
+	print highScore
 	frame.tick(2)
 	ticks = 0
 	movements = 0
 	arcColorRed = random.randint(0,255)
 	arcColorBlue = random.randint(0,255)
 	arcColorGreen = random.randint(0,255)
-	movingColorRed = (arcColorRed + 185) % 256
-	movingColorBlue = (arcColorBlue + 127) % 256
-	movingColorGreen = (arcColorGreen + 52) % 256
+	pinColorRed = (arcColorRed + random.randint(20,235)) % 256
+	pinColorBlue = (arcColorBlue + random.randint(20,235)) % 256
+	pinColorGreen = (arcColorGreen + random.randint(20,235)) % 256
 	arcColor = (arcColorRed, arcColorBlue, arcColorGreen)
 	spinnerColor = (255, 255, 255)
 	if (arcColorRed + arcColorGreen + arcColorBlue) > 400: spinnerColor = darkGray
-	movingColor = (movingColorRed, movingColorBlue, movingColorGreen)
-	arcText = mainMenuFont.render("arc", True, movingColor)
-	pinText = mainMenuFont.render("pin", True, movingColor)
+	pinColor = (pinColorRed, pinColorBlue, pinColorGreen)
+	arcText = mainMenuFont.render("arc", True, pinColor)
+	pinText = mainMenuFont.render("pin", True, pinColor)
 	while mainMenuShowing:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -143,20 +143,20 @@ while gameInUse:
 				arcColorRed = random.randint(0,255)
 				arcColorBlue = random.randint(0,255)
 				arcColorGreen = random.randint(0,255)
-				movingColorRed = (arcColorRed + 185) % 256
-				movingColorBlue = (arcColorBlue + 127) % 256
-				movingColorGreen = (arcColorGreen + 152) % 256
+				pinColorRed = (arcColorRed + random.randint(20,235)) % 256
+				pinColorBlue = (arcColorBlue + random.randint(20,235)) % 256
+				pinColorGreen = (arcColorGreen + random.randint(20,235)) % 256
 				arcColor = (arcColorRed, arcColorBlue, arcColorGreen)
-				movingColor = (movingColorRed, movingColorBlue, movingColorGreen)
-				arcText = mainMenuFont.render("arc", True, movingColor)
-				pinText = mainMenuFont.render("pin", True, movingColor)
+				pinColor = (pinColorRed, pinColorBlue, pinColorGreen)
+				arcText = mainMenuFont.render("arc", True, pinColor)
+				pinText = mainMenuFont.render("pin", True, pinColor)
 				movements = 0
 			screen.fill(black)
 			for arc in mainMenuArcs:
 				pygame.draw.arc(screen, arcColor, arc[0], arc[1], arc[2], 6)
 			screen.blit(arcText, (400 - arcText.get_width(), 232 - arcText.get_height()/2))
 			screen.blit(pinText, (560, 386 - pinText.get_height()/2))
-			pygame.draw.arc(screen, movingColor, mainMenuArcs[movements][0], mainMenuArcs[movements][1], mainMenuArcs[movements][2], 6)
+			pygame.draw.arc(screen, pinColor, mainMenuArcs[movements][0], mainMenuArcs[movements][1], mainMenuArcs[movements][2], 6)
 			movements += 1
 			ticks = 0
 		ticks += 1
@@ -199,7 +199,7 @@ while gameInUse:
 					gameOver = True
 					gameActive = False
 			frame.tick(5)
-			xsCircle = drawPinnedCircle(1, 6, movingColor, arcColor, xsSquareForCircles, [])
+			xsCircle = drawPinnedCircle(1, 6, pinColor, arcColor, xsSquareForCircles, [])
 			randomMultiplier = random.randint(0, xsCircle.numberOfArcs)
 			movements = randomMultiplier
 			rotations = 0
@@ -264,7 +264,7 @@ while gameInUse:
 				continue
 
 			frame.tick(5)
-			sCircle = drawPinnedCircle(1, 12, movingColor, arcColor, sSquareForCircles, [])
+			sCircle = drawPinnedCircle(1, 12, pinColor, arcColor, sSquareForCircles, [])
 			randomMultiplier = random.randint(0, sCircle.numberOfArcs)
 			movements = randomMultiplier
 			rotations = 0
@@ -328,7 +328,7 @@ while gameInUse:
 				continue
 
 			frame.tick(5)
-			mCircle = drawPinnedCircle(1, 24, movingColor, arcColor, mSquareForCircles, [])
+			mCircle = drawPinnedCircle(1, 24, pinColor, arcColor, mSquareForCircles, [])
 			randomMultiplier = random.randint(0, mCircle.numberOfArcs)
 			movements = randomMultiplier
 			rotations = 0
@@ -412,7 +412,7 @@ while gameInUse:
 
 			if lCircleActive and level > 3:
 				frame.tick(5)
-				lCircle = drawPinnedCircle(1, 60, movingColor, arcColor, lSquareForCircles, [])
+				lCircle = drawPinnedCircle(1, 60, pinColor, arcColor, lSquareForCircles, [])
 				randomMultiplier = random.randint(0, lCircle.numberOfArcs)
 				movements = randomMultiplier
 				rotations = 0
@@ -495,7 +495,7 @@ while gameInUse:
 
 			if xlCircleActive and level >= 6:
 				frame.tick(5)
-				xlCircle = drawPinnedCircle(1, 120, movingColor, arcColor, xlSquareForCircles, [])
+				xlCircle = drawPinnedCircle(1, 120, pinColor, arcColor, xlSquareForCircles, [])
 				randomMultiplier = random.randint(0, xlCircle.numberOfArcs)
 				movements = randomMultiplier
 				rotations = 0
@@ -579,7 +579,7 @@ while gameInUse:
 				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 250 - gameOverText.get_height()/2))
 			elif ticks == 60:
 				screen.fill(black)
-				gameOverText = largeFont.render("GAME OVER", True, spinnerColor)
+				gameOverText = largeFont.render("GAME OVER", True, pinColor)
 				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 250 - gameOverText.get_height()/2))
 				ticks = 0
 			pygame.display.flip()

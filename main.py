@@ -59,9 +59,10 @@ size = (960, 640)
 screen = pygame.display.set_mode(size)
 frame = pygame.time.Clock()
 mainMenuFont = pygame.font.Font("Roboto-Light.ttf", 100)
-largeFont = pygame.font.SysFont("arial", 30, True)
-mediumFont = pygame.font.SysFont("arial", 22, True)
-smallFont = pygame.font.SysFont("arial", 14, True)
+largestFont = mainMenuFont
+largeFont = pygame.font.SysFont("Roboto-Light.ttf", 40, True)
+mediumFont = pygame.font.SysFont("Roboto-Light.ttf", 30, True)
+smallFont = pygame.font.SysFont("Roboto-Light.ttf", 18, True)
 
 #Initialize all global variables
 #bools
@@ -117,6 +118,11 @@ while gameInUse:
 	scoreHolder = shelve.open('highscore.txt')
 	highScore = scoreHolder['highScore']
 	scoreHolder.close()
+
+	pygame.mixer.music.stop()
+	pygame.mixer.music.load('mainmenu2.mid')
+	pygame.mixer.music.play(-1)
+
 	print highScore
 	frame.tick(2)
 	ticks = 0
@@ -129,7 +135,14 @@ while gameInUse:
 	pinColorGreen = (arcColorGreen + random.randint(20,235)) % 256
 	arcColor = (arcColorRed, arcColorBlue, arcColorGreen)
 	spinnerColor = (255, 255, 255)
-	if (arcColorRed + arcColorGreen + arcColorBlue) > 400: spinnerColor = darkGray
+	if (arcColorRed + arcColorGreen + arcColorBlue) > 500: 
+		spinnerColor = darkGray
+	elif arcColorRed > 230 and (arcColorBlue > 85 or arcColorGreen > 85): 
+		spinnerColor = darkGray
+	elif arcColorGreen > 230 and (arcColorRed > 80 or arcColorBlue > 80):
+		spinnerColor = darkGray
+	elif arcColorBlue > 200 and (arcColorRed > 150 or arcColorGreen > 150):
+		spinnerColor = darkGray
 	pinColor = (pinColorRed, pinColorBlue, pinColorGreen)
 	arcText = mainMenuFont.render("arc", True, pinColor)
 	pinText = mainMenuFont.render("pin", True, pinColor)
@@ -138,7 +151,7 @@ while gameInUse:
 			if event.type == pygame.QUIT:
 				gameOver = True
 				gameActive = False
-		if ticks == 4:
+		if ticks == 5:
 			if movements > 11: 
 				arcColorRed = random.randint(0,255)
 				arcColorBlue = random.randint(0,255)
@@ -169,6 +182,9 @@ while gameInUse:
 			mainMenuShowing = False
 			gameActive = True
 			xsCircleActive = True
+			pygame.mixer.music.stop()
+			pygame.mixer.music.load('gameplay2.mid')
+			pygame.mixer.music.play(-1)
 
 
 	while gameActive:
@@ -238,7 +254,7 @@ while gameInUse:
 					rotations += 1
 					movements = 0
 				ticks += 1
-				if rotations > 10:
+				if rotations > 15:
 					circleScore = 0
 					xsCircleActive = False
 					gameOver = True
@@ -255,6 +271,12 @@ while gameInUse:
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
 			if gameOver:
+				if score > highScore:
+					scoreHolder = shelve.open('highscore.txt')
+					scoreHolder['highScore'] = score
+					scoreHolder.close()
+					highScore = score
+					#NEW HIGH SCORE
 				frame.tick(1)
 				screen.fill(black)
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -279,7 +301,7 @@ while gameInUse:
 				pygame.event.pump()
 				if pygame.mouse.get_pressed()[0]:
 					if movements == 0: movements = sCircle.numberOfArcs
-					circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(500, 300, movements - 1, sCircle.pins, sCircle.numberOfArcs, comboMultiplier, rotations)
+					circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(200, 120, movements - 1, sCircle.pins, sCircle.numberOfArcs, comboMultiplier, rotations)
 					if missedPin: missedPins += 1
 					score += circleScore
 					sCircleActive = False
@@ -302,7 +324,7 @@ while gameInUse:
 					rotations += 1
 					movements = 0
 				ticks += 1
-				if rotations > 12:
+				if rotations > 15:
 					circleScore = 0
 					sCircleActive = False
 					gameOver = True
@@ -319,6 +341,12 @@ while gameInUse:
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
 			if gameOver:
+				if score > highScore:
+					scoreHolder = shelve.open('highscore.txt')
+					scoreHolder['highScore'] = score
+					scoreHolder.close()
+					highScore = score
+					#NEW HIGH SCORE
 				frame.tick(1)
 				screen.fill(black)
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -343,7 +371,7 @@ while gameInUse:
 				pygame.event.pump()
 				if pygame.mouse.get_pressed()[0]:
 					if movements == 0: movements = mCircle.numberOfArcs
-					circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(1000, 600, movements - 1, mCircle.pins, mCircle.numberOfArcs, comboMultiplier, rotations)
+					circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(400, 240, movements - 1, mCircle.pins, mCircle.numberOfArcs, comboMultiplier, rotations)
 					if missedPin: missedPins += 1
 					score += circleScore
 
@@ -401,7 +429,13 @@ while gameInUse:
 			scoreTextNumber = largeFont.render(str(score), True, white)
 			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
-			if gameOver: 
+			if gameOver:
+				if score > highScore:
+					scoreHolder = shelve.open('highscore.txt')
+					scoreHolder['highScore'] = score
+					scoreHolder.close()
+					highScore = score
+					#NEW HIGH SCORE 
 				frame.tick(1)
 				screen.fill(black)
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -427,7 +461,7 @@ while gameInUse:
 					pygame.event.pump()
 					if pygame.mouse.get_pressed()[0]:
 						if movements == 0: movements = lCircle.numberOfArcs
-						circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(5000, 3000, movements - 1, lCircle.pins, lCircle.numberOfArcs, comboMultiplier, rotations)
+						circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(1000, 600, movements - 1, lCircle.pins, lCircle.numberOfArcs, comboMultiplier, rotations)
 						if missedPin: missedPins += 1
 						score += circleScore
 						if level >= 6:
@@ -485,6 +519,12 @@ while gameInUse:
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 
 			if gameOver:
+				if score > highScore:
+					scoreHolder = shelve.open('highscore.txt')
+					scoreHolder['highScore'] = score
+					scoreHolder.close()
+					highScore = score
+					#NEW HIGH SCORE 
 				frame.tick(1)
 				screen.fill(black)
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -510,7 +550,7 @@ while gameInUse:
 					pygame.event.pump()
 					if pygame.mouse.get_pressed()[0]:
 						if movements == 0: movements = xlCircle.numberOfArcs
-						circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(10000, 6000, movements - 1, xlCircle.pins, xlCircle.numberOfArcs, comboMultiplier, rotations)
+						circleScore, missedPin, comboMultiplier = getScoreMissedPinsAndMultiplier(2000, 1200, movements - 1, xlCircle.pins, xlCircle.numberOfArcs, comboMultiplier, rotations)
 						if missedPin: missedPins += 1
 						score += circleScore
 						if missedPins > 0:
@@ -561,7 +601,13 @@ while gameInUse:
 				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
 				pygame.display.flip()
 
-			if gameOver: 
+			if gameOver:
+				if score > highScore:
+					scoreHolder = shelve.open('highscore.txt')
+					scoreHolder['highScore'] = score
+					scoreHolder.close()
+					highScore = score
+					#NEW HIGH SCORE 
 				frame.tick(2)
 				screen.fill(black)
 				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -571,16 +617,27 @@ while gameInUse:
 				frame.tick(1.5)
 				ticks = 0
 				continue
-
+		
+		pygame.mixer.music.stop()
+		pygame.mixer.music.load('gameover.mid')
+		pygame.mixer.music.play(1)
 		while restartScreenActive:
 			if ticks == 30:
 				screen.fill(black)
-				gameOverText = largeFont.render("GAME OVER", True, arcColor)
-				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 250 - gameOverText.get_height()/2))
+				gameOverText = largestFont.render("GAME OVER", True, arcColor)
+				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 150 - gameOverText.get_height()/2))
+				finalScoreText = largeFont.render("Your Score => " + str(score), True, arcColor)
+				screen.blit(finalScoreText, (480 - finalScoreText.get_width()/2, 320 - finalScoreText.get_height()/2))
+				highScoreText = largeFont.render("High Score => " + str(highScore), True, pinColor)
+				screen.blit(highScoreText, (480 - highScoreText.get_width()/2, 400 - highScoreText.get_height()/2))
 			elif ticks == 60:
 				screen.fill(black)
-				gameOverText = largeFont.render("GAME OVER", True, pinColor)
-				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 250 - gameOverText.get_height()/2))
+				gameOverText = largestFont.render("GAME OVER", True, pinColor)
+				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 150 - gameOverText.get_height()/2))
+				finalScoreText = largeFont.render("Your Score => " + str(score), True, arcColor)
+				screen.blit(finalScoreText, (480 - finalScoreText.get_width()/2, 320 - finalScoreText.get_height()/2))
+				highScoreText = largeFont.render("High Score => " + str(highScore), True, pinColor)
+				screen.blit(highScoreText, (480 - highScoreText.get_width()/2, 400 - highScoreText.get_height()/2))
 				ticks = 0
 			pygame.display.flip()
 			frame.tick(60)

@@ -54,7 +54,7 @@ def getScoreMissedPinsAndMultiplier(circlePinValue, circleNonPinValue, movements
 	return thisCircleScore, missedPin, comboMultiplier
 
 pygame.init()
-pygame.display.set_caption("ArcSpin")
+pygame.display.set_caption("arcSpin")
 size = (960, 640)
 screen = pygame.display.set_mode(size)
 frame = pygame.time.Clock()
@@ -74,13 +74,6 @@ restartScreenActive = False
 #colors
 black = (0, 0, 0)
 white = (255, 255, 255)
-red = (204, 0, 0)
-orange = (255, 128, 0)
-yellow = (255, 255, 0)
-green = (0, 255, 0)
-blue = (0, 0, 153)
-purple = (76, 0, 153)
-gray = (96, 96, 96)
 darkGray = (32, 32, 32)
 
 mainMenuTopRect = [400, 152, 160, 160]
@@ -93,7 +86,6 @@ mSquareForCircles = [140, 140, 360, 360]
 lSquareForCircles = [80, 80, 480, 480]
 xlSquareForCircles = [20, 20, 600, 600]
 
-tooManyRotations = largeFont.render("Too many rotations!", True, white)
 arcWidth = 12
 
 mainMenuArc1 = [mainMenuTopRect, 0, pi/4]
@@ -123,7 +115,6 @@ while gameInUse:
 	pygame.mixer.music.load('mainmenu2.mid')
 	pygame.mixer.music.play(-1)
 
-	print highScore
 	frame.tick(2)
 	ticks = 0
 	movements = 0
@@ -169,6 +160,10 @@ while gameInUse:
 				pygame.draw.arc(screen, arcColor, arc[0], arc[1], arc[2], 6)
 			screen.blit(arcText, (400 - arcText.get_width(), 232 - arcText.get_height()/2))
 			screen.blit(pinText, (560, 386 - pinText.get_height()/2))
+			highScoreText = largeFont.render("High Score => " + str(highScore), True, pinColor)
+			screen.blit(highScoreText, (480 - highScoreText.get_width()/2, 540 - highScoreText.get_height()/2))
+			aaHumbleText = smallFont.render("By AAHumble Software, copyright 2018", True, arcColor)
+			screen.blit(aaHumbleText, (480 - aaHumbleText.get_width()/2, 600 - aaHumbleText.get_height()/2))
 			pygame.draw.arc(screen, pinColor, mainMenuArcs[movements][0], mainMenuArcs[movements][1], mainMenuArcs[movements][2], 6)
 			movements += 1
 			ticks = 0
@@ -178,6 +173,9 @@ while gameInUse:
 
 		pygame.event.pump()
 		if pygame.mouse.get_pressed()[0]:
+			#Game Over Reasons
+			tooManyRotations = largeFont.render("Too many rotations!", True, pinColor)
+			missedAPin = largeFont.render("You missed a pin!", True, pinColor)
 			ticks = 0
 			mainMenuShowing = False
 			gameActive = True
@@ -237,7 +235,6 @@ while gameInUse:
 					xsCircleActive = False
 					sCircleActive = True
 					speedFps = int(1.02 * speedFps)
-					print speedFps
 					continue
 				if ticks == 20:
 					screen.fill(black)
@@ -258,7 +255,7 @@ while gameInUse:
 					circleScore = 0
 					xsCircleActive = False
 					gameOver = True
-					screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
+					gameOverReason = tooManyRotations
 				pygame.display.flip()
 				frame.tick(speedFps)
 			screen.fill(black)
@@ -307,7 +304,6 @@ while gameInUse:
 					sCircleActive = False
 					mCircleActive = True
 					speedFps = int(1.02 * speedFps)
-					print speedFps
 					continue
 				if ticks == 20:
 					screen.fill(black)
@@ -328,7 +324,7 @@ while gameInUse:
 					circleScore = 0
 					sCircleActive = False
 					gameOver = True
-					screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
+					gameOverReason = tooManyRotations
 				pygame.display.flip()
 				frame.tick(speedFps)
 			screen.fill(black)
@@ -379,13 +375,13 @@ while gameInUse:
 						mCircleActive = False
 						lCircleActive = True
 						speedFps = int(1.02 * speedFps)
-						print speedFps
 					else:
 						if missedPins > 0:
 							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 							mCircleActive = False
 							gameOver = True
+							gameOverReason = missedAPin
 							continue
 						else:
 							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
@@ -396,7 +392,6 @@ while gameInUse:
 							mCircleActive = False
 							xsCircleActive = True
 							speedFps = int((1.02 ** level) * speedFps)
-							print speedFps
 				if ticks == 20:
 					screen.fill(black)
 					screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
@@ -416,7 +411,7 @@ while gameInUse:
 					circleScore = 0
 					mCircleActive = False
 					gameOver = True
-					screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
+					gameOverReason = tooManyRotations
 				pygame.display.flip()
 				frame.tick(speedFps)
 			screen.fill(black)
@@ -468,13 +463,13 @@ while gameInUse:
 							lCircleActive = False
 							xlCircleActive = True
 							speedFps = int(1.02 * speedFps)
-							print speedFps
 						else:
 							if missedPins > 0:
 								circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
 								screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 								lCircleActive = False
 								gameOver = True
+								gameOverReason = missedAPin
 								continue
 							else:
 								drawPinnedCircle(lCircle.numberOfPins, lCircle.numberOfArcs, lCircle.color1, lCircle.color2, lCircle.areaForCircle, lCircle.pins)
@@ -485,7 +480,6 @@ while gameInUse:
 								lCircleActive = False
 								xsCircleActive = True
 								speedFps = int((1.02 ** level) * speedFps)
-								print speedFps
 					if ticks == 12:
 						screen.fill(black)
 						screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
@@ -505,7 +499,7 @@ while gameInUse:
 						circleScore = 0
 						lCircleActive = False
 						gameOver = True
-						screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
+						gameOverReason = tooManyRotations
 					pygame.display.flip()
 					frame.tick(speedFps)
 				screen.fill(black)
@@ -558,6 +552,7 @@ while gameInUse:
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 							xlCircleActive = False
 							gameOver = True
+							gameOverReason = missedAPin
 							continue
 						else:
 							drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
@@ -568,7 +563,6 @@ while gameInUse:
 							xlCircleActive = False
 							xsCircleActive = True
 							speedFps = int((1.02 ** level) * speedFps)
-							print speedFps
 					if ticks == 8:
 						screen.fill(black)
 						screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
@@ -588,7 +582,7 @@ while gameInUse:
 						circleScore = 0
 						xlCircleActive = False
 						gameOver = True
-						screen.blit(tooManyRotations, (800 - tooManyRotations.get_width()/2, 320 - tooManyRotations.get_height()/2))
+						gameOverReason = tooManyRotations
 					pygame.display.flip()
 					frame.tick(speedFps)
 				screen.fill(black)
@@ -626,6 +620,7 @@ while gameInUse:
 				screen.fill(black)
 				gameOverText = largestFont.render("GAME OVER", True, arcColor)
 				screen.blit(gameOverText, (480 - gameOverText.get_width()/2, 150 - gameOverText.get_height()/2))
+				screen.blit(gameOverReason, (480 - gameOverReason.get_width()/2, 240 - gameOverReason.get_height()/2))
 				finalScoreText = largeFont.render("Your Score => " + str(score), True, arcColor)
 				screen.blit(finalScoreText, (480 - finalScoreText.get_width()/2, 320 - finalScoreText.get_height()/2))
 				highScoreText = largeFont.render("High Score => " + str(highScore), True, pinColor)

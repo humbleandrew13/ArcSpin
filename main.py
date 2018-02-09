@@ -77,6 +77,9 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 darkGray = (32, 32, 32)
 lightGray = (120, 120, 120)
+red = (255, 0, 0)
+green = (0, 255, 0)
+blue = (0, 0, 230)
 
 mainMenuTopRect = [400, 152, 160, 160]
 mainMenuBottomRect = [400, 306, 160, 160]
@@ -132,9 +135,9 @@ while gameInUse:
 	spinnerColor = (255, 255, 255)
 	if (arcColorRed + arcColorGreen + arcColorBlue) > 500: 
 		spinnerColor = darkGray
-	elif arcColorRed > 230 and (arcColorBlue > 85 or arcColorGreen > 85): 
+	elif arcColorRed > 200 and (arcColorBlue > 85 or arcColorGreen > 85): 
 		spinnerColor = darkGray
-	elif arcColorGreen > 230 and (arcColorRed > 80 or arcColorBlue > 80):
+	elif arcColorGreen > 200 and (arcColorRed > 80 or arcColorBlue > 80):
 		spinnerColor = darkGray
 	elif arcColorBlue > 200 and (arcColorRed > 150 or arcColorGreen > 150):
 		spinnerColor = darkGray
@@ -166,7 +169,7 @@ while gameInUse:
 			screen.blit(pinText, (560, 386 - pinText.get_height()/2))
 			highScoreText = largeFont.render("High Score => " + str(highScore), True, pinColor)
 			screen.blit(highScoreText, (480 - highScoreText.get_width()/2, 540 - highScoreText.get_height()/2))
-			aaHumbleText = smallFont.render("By AAHumble Software, copyright 2018", True, arcColor)
+			aaHumbleText = smallFont.render("By A Humble Tech Co, copyright 2018", True, arcColor)
 			screen.blit(aaHumbleText, (480 - aaHumbleText.get_width()/2, 600 - aaHumbleText.get_height()/2))
 			pygame.draw.arc(screen, pinColor, mainMenuArcs[movements][0], mainMenuArcs[movements][1], mainMenuArcs[movements][2], 6)
 			movements += 1
@@ -208,9 +211,13 @@ while gameInUse:
 		comboMultiplier = 0
 		score = 0
 		speedFps = 60
-		scoreTextWord = largeFont.render("Score", True, white)
-		scoreTextNumber = largeFont.render(str(score), True, white)
-		circleScoreText = smallFont.render("", True, white)
+		levelTextWord = largestFont.render("Level", True, pinColor)
+		scoreTextWord = largestFont.render("Score", True, pinColor)
+		comboTextWord = largeFont.render("Multiplier", True, pinColor)
+		levelTextNumber = largestFont.render(str(level), True, arcColor)
+		comboTextNumber = largeFont.render(str(comboMultiplier + 1), True, arcColor)
+		scoreTextNumber = largeFont.render(str(score), True, arcColor)
+		circleScoreText = smallFont.render("", True, pinColor)
 
 		while gameOver == False:
 			for event in pygame.event.get():
@@ -227,11 +234,18 @@ while gameInUse:
 			xsCircleRadiantIncrement = 2 * pi/ xsCircle.numberOfArcs
 			pygame.draw.arc(screen, spinnerColor, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
 			ticks = 0
-			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
-			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+			levelTextNumber = largestFont.render(str(level), True, arcColor)
+			comboTextNumber = largeFont.render(str(comboMultiplier + 1), True, arcColor)
 			pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 			pygame.draw.rect(screen, darkGray, gameInfoRectInner)
+			screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+			screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+			screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+			screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
+			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
+			
 			while xsCircleActive == True:
 				pygame.event.pump()
 				if pygame.mouse.get_pressed()[0]:
@@ -248,8 +262,12 @@ while gameInUse:
 					screen.fill(black)
 					pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 					pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-					screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+					screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+					screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+					screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+					screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+					screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
 					pygame.draw.arc(screen, spinnerColor, xsSquareForCircles, xsCircleStartingRadiant, xsCircleEndingRadiant, arcWidth)
@@ -271,13 +289,17 @@ while gameInUse:
 			screen.fill(black)
 			pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 			pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-			circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+			circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 			drawPinnedCircle(xsCircle.numberOfPins, xsCircle.numberOfArcs, xsCircle.color1, xsCircle.color2, xsCircle.areaForCircle, xsCircle.pins)
 			pygame.draw.arc(screen, spinnerColor, xsSquareForCircles, xsCircleStartingRadiant - xsCircleRadiantIncrement, xsCircleEndingRadiant - xsCircleRadiantIncrement, arcWidth)
-			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-			scoreTextNumber = largeFont.render(str(score), True, white)
-			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+			scoreTextNumber = largeFont.render(str(score), True, arcColor)
+			screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+			screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+			screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+			screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 
 			if gameOver:
 				if score > highScore:
@@ -288,7 +310,7 @@ while gameInUse:
 					isNewHighScore = True
 				frame.tick(1)
 				screen.fill(black)
-				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				restartScreenActive = True
 				pygame.display.flip()
@@ -304,10 +326,17 @@ while gameInUse:
 			sCircleRadiantIncrement = 2 * pi/ sCircle.numberOfArcs
 			pygame.draw.arc(screen, spinnerColor, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
 			ticks = 0
-			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+			levelTextNumber = largestFont.render(str(level), True, arcColor)
+			comboTextNumber = largeFont.render(str(comboMultiplier + 1), True, arcColor)
 			pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
-			pygame.draw.rect(screen, darkGray, gameInfoRectInner)
+			pygame.draw.rect(screen, darkGray, gameInfoRectInner)	
+			screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+			screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+			screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+			screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
+			
 			while sCircleActive == True:
 				pygame.event.pump()
 				if pygame.mouse.get_pressed()[0]:
@@ -324,8 +353,12 @@ while gameInUse:
 					screen.fill(black)
 					pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 					pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-					screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+					screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+					screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+					screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+					screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+					screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(sCircle.numberOfPins, sCircle.numberOfArcs, sCircle.color1, sCircle.color2, sCircle.areaForCircle, sCircle.pins)
 					pygame.draw.arc(screen, spinnerColor, sSquareForCircles, sCircleStartingRadiant, sCircleEndingRadiant, arcWidth)
@@ -347,13 +380,17 @@ while gameInUse:
 			screen.fill(black)
 			pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 			pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-			circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+			circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 			screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 			drawPinnedCircle(sCircle.numberOfPins, sCircle.numberOfArcs, sCircle.color1, sCircle.color2, sCircle.areaForCircle, sCircle.pins)
 			pygame.draw.arc(screen, spinnerColor, sSquareForCircles, sCircleStartingRadiant - sCircleRadiantIncrement, sCircleEndingRadiant - sCircleRadiantIncrement, arcWidth)
-			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-			scoreTextNumber = largeFont.render(str(score), True, white)
-			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+			scoreTextNumber = largeFont.render(str(score), True, arcColor)
+			screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+			screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+			screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+			screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 
 			if gameOver:
 				if score > highScore:
@@ -364,7 +401,7 @@ while gameInUse:
 					isNewHighScore = True
 				frame.tick(1)
 				screen.fill(black)
-				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				restartScreenActive = True
 				pygame.display.flip()
@@ -380,10 +417,17 @@ while gameInUse:
 			mCircleRadiantIncrement = 2 * pi/ mCircle.numberOfArcs
 			pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
 			ticks = 0
-			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+			levelTextNumber = largestFont.render(str(level), True, arcColor)
+			comboTextNumber = largeFont.render(str(comboMultiplier + 1), True, arcColor)
 			pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 			pygame.draw.rect(screen, darkGray, gameInfoRectInner)
+			screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+			screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+			screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+			screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
+			
 			while mCircleActive == True:
 				pygame.event.pump()
 				if pygame.mouse.get_pressed()[0]:
@@ -398,14 +442,14 @@ while gameInUse:
 						speedFps = int(1.02 * speedFps)
 					else:
 						if missedPins > 0:
-							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+							circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 							mCircleActive = False
 							gameOver = True
 							gameOverReason = missedAPin
 							continue
 						else:
-							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+							circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 							drawPinnedCircle(mCircle.numberOfPins, mCircle.numberOfArcs, mCircle.color1, mCircle.color2, mCircle.areaForCircle, mCircle.pins)
 							pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant - mCircleRadiantIncrement, mCircleEndingRadiant - mCircleRadiantIncrement, arcWidth)
@@ -417,8 +461,12 @@ while gameInUse:
 					screen.fill(black)
 					pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 					pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-					screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+					screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+					screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+					screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+					screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+					screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+					screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(mCircle.numberOfPins, mCircle.numberOfArcs, mCircle.color1, mCircle.color2, mCircle.areaForCircle, mCircle.pins)
 					pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant, mCircleEndingRadiant, arcWidth)
@@ -441,13 +489,17 @@ while gameInUse:
 			if lCircleActive:
 				pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 				pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				drawPinnedCircle(mCircle.numberOfPins, mCircle.numberOfArcs, mCircle.color1, mCircle.color2, mCircle.areaForCircle, mCircle.pins)
 				pygame.draw.arc(screen, spinnerColor, mSquareForCircles, mCircleStartingRadiant - mCircleRadiantIncrement, mCircleEndingRadiant - mCircleRadiantIncrement, arcWidth)
-			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-			scoreTextNumber = largeFont.render(str(score), True, white)
-			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+			scoreTextNumber = largeFont.render(str(score), True, arcColor)
+			screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+			screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+			screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+			screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+			screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+			screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 
 			if gameOver:
 				if score > highScore:
@@ -458,7 +510,7 @@ while gameInUse:
 					isNewHighScore = True
 				frame.tick(1)
 				screen.fill(black)
-				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				restartScreenActive = True
 				pygame.display.flip()
@@ -475,10 +527,16 @@ while gameInUse:
 				lCircleRadiantIncrement = 2 * pi/ lCircle.numberOfArcs
 				pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, arcWidth)
 				ticks = 0
-				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				levelTextNumber = largestFont.render(str(level), True, arcColor)
+				comboTextNumber = largeFont.render(str(comboMultiplier + 1), True, arcColor)
 				pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 				pygame.draw.rect(screen, darkGray, gameInfoRectInner)
+				screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+				screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+				screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+				screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 				while lCircleActive == True:
 					pygame.event.pump()
 					if pygame.mouse.get_pressed()[0]:
@@ -492,7 +550,7 @@ while gameInUse:
 							speedFps = int(1.02 * speedFps)
 						else:
 							if missedPins > 0:
-								circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+								circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 								screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 								lCircleActive = False
 								gameOver = True
@@ -501,7 +559,7 @@ while gameInUse:
 							else:
 								drawPinnedCircle(lCircle.numberOfPins, lCircle.numberOfArcs, lCircle.color1, lCircle.color2, lCircle.areaForCircle, lCircle.pins)
 								pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant - lCircleRadiantIncrement, lCircleEndingRadiant - lCircleRadiantIncrement, arcWidth)
-								circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+								circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 								screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 								level += 1	
 								lCircleActive = False
@@ -511,8 +569,12 @@ while gameInUse:
 						screen.fill(black)
 						pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 						pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-						screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-						screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+						screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+						screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+						screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+						screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+						screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+						screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 						screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 						drawPinnedCircle(lCircle.numberOfPins, lCircle.numberOfArcs, lCircle.color1, lCircle.color2, lCircle.areaForCircle, lCircle.pins)
 						pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant, lCircleEndingRadiant, arcWidth)
@@ -535,13 +597,17 @@ while gameInUse:
 				if xlCircleActive:
 					pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 					pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-					circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+					circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 					screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 					drawPinnedCircle(lCircle.numberOfPins, lCircle.numberOfArcs, lCircle.color1, lCircle.color2, lCircle.areaForCircle, lCircle.pins)
 					pygame.draw.arc(screen, spinnerColor, lSquareForCircles, lCircleStartingRadiant - lCircleRadiantIncrement, lCircleEndingRadiant - lCircleRadiantIncrement, arcWidth)
-				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-				scoreTextNumber = largeFont.render(str(score), True, white)
-				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				scoreTextNumber = largeFont.render(str(score), True, arcColor)
+				screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+				screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+				screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+				screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 
 			if gameOver:
 				if score > highScore:
@@ -552,7 +618,7 @@ while gameInUse:
 					isNewHighScore = True
 				frame.tick(1)
 				screen.fill(black)
-				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				restartScreenActive = True
 				pygame.display.flip()
@@ -569,10 +635,16 @@ while gameInUse:
 				xlCircleRadiantIncrement = 2 * pi/ xlCircle.numberOfArcs
 				pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, arcWidth)
 				ticks = 0
-				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				levelTextNumber = largestFont.render(str(level), True, arcColor)
+				comboTextNumber = largeFont.render(str(comboMultiplier + 1), True, arcColor)
 				pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 				pygame.draw.rect(screen, darkGray, gameInfoRectInner)
+				screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+				screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+				screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+				screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 				while xlCircleActive == True:
 					pygame.event.pump()
 					if pygame.mouse.get_pressed()[0]:
@@ -581,7 +653,7 @@ while gameInUse:
 						if missedPin: missedPins += 1
 						score += circleScore
 						if missedPins > 0:
-							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+							circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2)) 
 							xlCircleActive = False
 							gameOver = True
@@ -590,7 +662,7 @@ while gameInUse:
 						else:
 							drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
 							pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant - xlCircleRadiantIncrement, xlCircleEndingRadiant - xlCircleRadiantIncrement, arcWidth)
-							circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+							circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 							screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 							level += 1	
 							xlCircleActive = False
@@ -600,8 +672,12 @@ while gameInUse:
 						screen.fill(black)
 						pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 						pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-						screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-						screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+						screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+						screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+						screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+						screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+						screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+						screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 						screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 						drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
 						pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant, xlCircleEndingRadiant, arcWidth)
@@ -623,13 +699,17 @@ while gameInUse:
 				screen.fill(black)
 				pygame.draw.rect(screen, lightGray, gameInfoRectOuter)
 				pygame.draw.rect(screen, darkGray, gameInfoRectInner)
-				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				drawPinnedCircle(xlCircle.numberOfPins, xlCircle.numberOfArcs, xlCircle.color1, xlCircle.color2, xlCircle.areaForCircle, xlCircle.pins)
 				pygame.draw.arc(screen, spinnerColor, xlSquareForCircles, xlCircleStartingRadiant - xlCircleRadiantIncrement, xlCircleEndingRadiant - xlCircleRadiantIncrement, arcWidth)
-				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 120 - scoreTextWord.get_height()/2))
-				scoreTextNumber = largeFont.render(str(score), True, white)
-				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 160 - scoreTextNumber.get_height()/2))
+				scoreTextNumber = largeFont.render(str(score), True, arcColor)
+				screen.blit(levelTextWord, (800 - levelTextWord.get_width()/2, 80 - levelTextWord.get_height()/2))
+				screen.blit(levelTextNumber, (800 - levelTextNumber.get_width()/2, 160 - levelTextNumber.get_height()/2))
+				screen.blit(scoreTextWord, (800 - scoreTextWord.get_width()/2, 280 - scoreTextWord.get_height()/2))
+				screen.blit(scoreTextNumber, (800 - scoreTextNumber.get_width()/2, 340 - scoreTextNumber.get_height()/2))
+				screen.blit(comboTextWord, (800 - comboTextWord.get_width()/2, 480 - comboTextWord.get_height()/2))
+				screen.blit(comboTextNumber, (800 - comboTextNumber.get_width()/2, 520 - comboTextNumber.get_height()/2))
 				pygame.display.flip()
 
 			if gameOver:
@@ -641,7 +721,7 @@ while gameInUse:
 					isNewHighScore = True
 				frame.tick(2)
 				screen.fill(black)
-				circleScoreText = smallFont.render("+ " + str(circleScore), True, white)
+				circleScoreText = smallFont.render("+ " + str(circleScore), True, pinColor)
 				screen.blit(circleScoreText, (320 - circleScoreText.get_width()/2, 320 - circleScoreText.get_height()/2))
 				restartScreenActive = True
 				pygame.display.flip()

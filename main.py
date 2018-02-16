@@ -126,22 +126,22 @@ while gameInUse:
 	ticks = 0
 	movements = 0
 
-	arcColorRed = random.randint(0,255)
-	arcColorGreen = random.randint(0,255)
-	arcColorBlue = random.randint(0,255)
+	arcColorRed = random.randint(0, 255)
+	arcColorGreen = random.randint(0, 255)
+	arcColorBlue = random.randint(0, 255)
 
-	pinColorRed = (arcColorRed + random.randint(0,255)) % 256
-	pinColorGreen = (arcColorGreen + random.randint(0,255)) % 256
-	pinColorBlue = (arcColorBlue + 127) % 256
+	pinColorRed = (arcColorRed + random.randint(0, 255)) % 256
+	pinColorGreen = (arcColorGreen + random.randint(60, 180)) % 256
+	pinColorBlue = (arcColorBlue + random.randint(60, 180)) % 256
 	
-	spinnerColorRed = (arcColorRed + 127) % 256
-	spinnerColorGreen = (arcColorGreen + random.randint(0,255)) % 256
+	spinnerColorRed = (arcColorRed + random.randint(60, 180)) % 256
+	spinnerColorGreen = (pinColorGreen + random.randint(60, 180)) % 256
 	spinnerColorBlue = (arcColorBlue + random.randint(0,255)) % 256
 
 	arcColor = (arcColorRed, arcColorGreen, arcColorBlue)
 	pinColor = (pinColorRed, pinColorGreen, pinColorBlue)
 	spinnerColor = (spinnerColorRed, spinnerColorGreen, spinnerColorBlue)
-	
+
 	arcText = mainMenuFont.render("arc", True, pinColor)
 	pinText = mainMenuFont.render("pin", True, pinColor)
 
@@ -156,18 +156,18 @@ while gameInUse:
 				arcColorGreen = random.randint(0,255)
 				arcColorBlue = random.randint(0,255)
 
-				pinColorRed = (arcColorRed + random.randint(0,255)) % 256
-				pinColorGreen = (arcColorGreen + random.randint(0,255)) % 256
-				pinColorBlue = (arcColorBlue + 127) % 256
+				pinColorRed = (arcColorRed + random.randint(0, 255)) % 256
+				pinColorGreen = (arcColorGreen + random.randint(60, 180)) % 256
+				pinColorBlue = (arcColorBlue + random.randint(60, 180)) % 256
 				
-				spinnerColorRed = (arcColorRed + 127) % 256
-				spinnerColorGreen = (arcColorGreen + random.randint(0,255)) % 256
+				spinnerColorRed = (arcColorRed + random.randint(60, 180)) % 256
+				spinnerColorGreen = (pinColorGreen + random.randint(60, 180)) % 256
 				spinnerColorBlue = (arcColorBlue + random.randint(0,255)) % 256
 
 				arcColor = (arcColorRed, arcColorGreen, arcColorBlue)
 				pinColor = (pinColorRed, pinColorGreen, pinColorBlue)
 				spinnerColor = (spinnerColorRed, spinnerColorGreen, spinnerColorBlue)
-
+				
 				arcText = mainMenuFont.render("arc", True, pinColor)
 				pinText = mainMenuFont.render("pin", True, pinColor)
 				movements = 0

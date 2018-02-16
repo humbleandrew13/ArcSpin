@@ -130,13 +130,13 @@ while gameInUse:
 	arcColorGreen = random.randint(0,255)
 	arcColorBlue = random.randint(0,255)
 
-	pinColorRed = (arcColorRed + 200) % 256
-	pinColorGreen = (arcColorGreen + 200) % 256
-	pinColorBlue = (arcColorBlue + 200) % 256
+	pinColorRed = (arcColorRed + random.randint(0,255)) % 256
+	pinColorGreen = (arcColorGreen + random.randint(0,255)) % 256
+	pinColorBlue = (arcColorBlue + 127) % 256
 	
 	spinnerColorRed = (arcColorRed + 127) % 256
-	spinnerColorGreen = (arcColorGreen + 127) % 256
-	spinnerColorBlue = (arcColorBlue + 127) % 256
+	spinnerColorGreen = (arcColorGreen + random.randint(0,255)) % 256
+	spinnerColorBlue = (arcColorBlue + random.randint(0,255)) % 256
 
 	arcColor = (arcColorRed, arcColorGreen, arcColorBlue)
 	pinColor = (pinColorRed, pinColorGreen, pinColorBlue)
@@ -153,13 +153,21 @@ while gameInUse:
 		if ticks == 5:
 			if movements > 11: 
 				arcColorRed = random.randint(0,255)
-				arcColorBlue = random.randint(0,255)
 				arcColorGreen = random.randint(0,255)
-				pinColorRed = (arcColorRed + random.randint(20,235)) % 256
-				pinColorBlue = (arcColorBlue + random.randint(20,235)) % 256
-				pinColorGreen = (arcColorGreen + random.randint(20,235)) % 256
-				arcColor = (arcColorRed, arcColorBlue, arcColorGreen)
-				pinColor = (pinColorRed, pinColorBlue, pinColorGreen)
+				arcColorBlue = random.randint(0,255)
+
+				pinColorRed = (arcColorRed + random.randint(0,255)) % 256
+				pinColorGreen = (arcColorGreen + random.randint(0,255)) % 256
+				pinColorBlue = (arcColorBlue + 127) % 256
+				
+				spinnerColorRed = (arcColorRed + 127) % 256
+				spinnerColorGreen = (arcColorGreen + random.randint(0,255)) % 256
+				spinnerColorBlue = (arcColorBlue + random.randint(0,255)) % 256
+
+				arcColor = (arcColorRed, arcColorGreen, arcColorBlue)
+				pinColor = (pinColorRed, pinColorGreen, pinColorBlue)
+				spinnerColor = (spinnerColorRed, spinnerColorGreen, spinnerColorBlue)
+
 				arcText = mainMenuFont.render("arc", True, pinColor)
 				pinText = mainMenuFont.render("pin", True, pinColor)
 				movements = 0
